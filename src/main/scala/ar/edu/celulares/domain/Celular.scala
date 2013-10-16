@@ -16,11 +16,16 @@ class Celular extends Entity {
 
   	final var MAX_NUMERO = 100000
 
-	@PersistentField var id : Integer = _
-	@PersistentField var numero : Integer = _
-	@PersistentField var nombre : String = _
-	@Relation var modeloCelular : Modelo = _
-	@PersistentField var recibeResumenCuenta : Boolean = false
+	var _numero : Integer = _
+	@PersistentField def getNumero = _numero
+	def setNumero(value: Integer) = _numero = value
+  	var _nombre : String = _
+	@PersistentField def getNombre = _nombre
+  	def setNombre(value: String) = _nombre = value
+  	var _modeloCelular : Modelo = _
+  	@Relation def getModeloCelular = _modeloCelular
+	var _recibeResumenCuenta : Boolean = false
+	@PersistentField def getRecibeResumenCuenta = _recibeResumenCuenta
 
 	// ********************************************************
 	// ** Getters y setters
@@ -34,14 +39,14 @@ class Celular extends Entity {
 		// para no entrar en loop infinito, en el setter debemos
 		// utilizar _ para indicar que nos referimos a la variable
 		// que genera xtend para compilar en Java
-		modeloCelular = unModeloCelular
+		_modeloCelular = unModeloCelular
 		// fin comentario
-		recibeResumenCuenta = unModeloCelular.requiereResumenCuenta
+		_recibeResumenCuenta = unModeloCelular.getRequiereResumenCuenta
 	}
 
 	def setRecibeResumenCuenta(siRecibeResumenCuenta: Boolean) = {
 		// idem modeloCelular
-		recibeResumenCuenta = siRecibeResumenCuenta
+		_recibeResumenCuenta = siRecibeResumenCuenta
 		// fin comentario _ sobre variable
 	}
 
@@ -52,44 +57,44 @@ class Celular extends Entity {
 	 * Valida que el celular esté correctamente cargado
 	 */
 	def validar() : Unit = {
-		if (numero == null) {
+		if (_numero == null) {
 			throw new UserException("Debe ingresar número")
 		}
-		if (numero.intValue() <= this.MAX_NUMERO) {
+		if (_numero.intValue() <= this.MAX_NUMERO) {
 			throw new UserException("El número debe ser mayor a " + this.MAX_NUMERO)
 		}
 		if (!this.ingresoNombre()) {
 			throw new UserException("Debe ingresar nombre")
 		}
-		if (modeloCelular == null) {
+		if (_modeloCelular == null) {
 			throw new UserException("Debe ingresar un modelo de celular")
 		}
 	}
 
-	def ingresoNombre() : Boolean = (nombre != null) && (!nombre.trim().equals(""))
+	def ingresoNombre() : Boolean = (_nombre != null) && (!_nombre.trim().equals(""))
 
 	// ********************************************************
 	// ** Getters y setters
 	// ********************************************************
-	def getHabilitaResumenCuenta() : Boolean = !modeloCelular.requiereResumenCuenta
+	def getHabilitaResumenCuenta() : Boolean = !_modeloCelular.getRequiereResumenCuenta
 
 	// ********************************************************
 	// ** Misceláneos
 	// ********************************************************
 	override def toString() : String = {
 		var result = new StringBuffer()
-		if (nombre != null) {
-			result.append(nombre)  
+		if (_nombre != null) {
+			result.append(_nombre)  
 		} else {
 			result.append("Celular sin nombre")
 		}
-		if (modeloCelular != null) {
-			result.append(" - " + modeloCelular)
+		if (_modeloCelular != null) {
+			result.append(" - " + _modeloCelular)
 		}
-		if (numero != null) {
-			result.append(" - " + numero)
+		if (_numero != null) {
+			result.append(" - " + _numero)
 		}
-		if (recibeResumenCuenta) {
+		if (_recibeResumenCuenta) {
 			result.append(" - recibe resumen")
 		} else {
 			result.append(" - no recibe resumen")

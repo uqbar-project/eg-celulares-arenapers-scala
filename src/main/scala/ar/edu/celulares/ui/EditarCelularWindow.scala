@@ -20,6 +20,7 @@ import org.uqbar.arena.actions.MessageSend
 import ar.edu.celulares.domain.Modelo
 import ar.edu.celulares.home.HomeCelulares
 import ar.edu.celulares.home.HomeModelos
+import org.uqbar.lacar.ui.model.Action
 import collection.JavaConversions._
 
 class EditarCelularWindow(owner: WindowOwner, model: Celular) extends Dialog[Celular](owner, model) {
@@ -50,6 +51,13 @@ class EditarCelularWindow(owner: WindowOwner, model: Celular) extends Dialog[Cel
 		new Button(actions) //
 			.setCaption("Cancelar")
 			.onClick(new MessageSend(this, "cancel"))
+			
+		this.onAccept(new Action() {
+			override def execute() {
+				HomeCelulares.update(EditarCelularWindow.this.getModelObject)
+			}
+
+		})
 	}
 
 }

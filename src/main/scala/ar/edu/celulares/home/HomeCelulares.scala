@@ -18,30 +18,27 @@ object HomeCelulares extends PersistentHome[Celular] {
 //  this.create("Chiara Dodino", 68026976, modelo("NOKIA ASHA 501"), false)
 //  this.create("Melina Dodino", 40989911, modelo("LG OPTIMUS L3 II"), true)
 
-  def modelo(modeloDescripcion: String): Modelo = {
-    // TODO: ¿Implementar cake pattern?
-    HomeModelos.get(modeloDescripcion)
-  }
+  def modelo(modeloDescripcion: String): Modelo = HomeModelos.get(modeloDescripcion)
 
   // ********************************************************
   // ** Altas y bajas
   // ********************************************************
   def create(pNombre: String, pNumero: Integer, pModeloCelular: Modelo, pRecibeResumenCuenta: Boolean): Unit = {
     var celular = new Celular
-    celular.nombre = pNombre
-    celular.numero = pNumero
-    celular.modeloCelular = pModeloCelular
-    celular.recibeResumenCuenta = pRecibeResumenCuenta
+    celular.setNombre(pNombre)
+    celular.setNumero(pNumero)
+    celular.setModeloCelular(pModeloCelular)
+    celular.setRecibeResumenCuenta(pRecibeResumenCuenta)
     this.create(celular)
   }
 
-  def validateCreate(celular: Celular): Unit = {
+  def validateCreate(celular: Celular) = {
     celular.validar()
     validarClientesDuplicados(celular)
   }
 
-  def validarClientesDuplicados(celular: Celular): Unit = {
-    val numero: Integer = celular.numero
+  def validarClientesDuplicados(celular: Celular) = {
+    val numero: Integer = celular.getNumero
     if (!this.search(numero).isEmpty) {
       throw new UserException("Ya existe un celular con el número: " + numero)
     }
@@ -57,9 +54,8 @@ object HomeCelulares extends PersistentHome[Celular] {
    * Soporta búsquedas por substring, por ejemplo el celular (12345, "Juan Gonzalez") será contemplado por
    * la búsqueda (23, "Gonza")
    */
-  def search(numero: Integer, nombre: String = null) = {
-    celulares.filter { celular => this.coincide(numero, celular.numero) && this.coincide(nombre, celular.nombre) }
-  }
+  def search(numero: Integer, nombre: String = null) = 
+    celulares.filter { celular => this.coincide(numero, celular.getNumero) && this.coincide(nombre, celular.getNombre) }
 
   def coincide(expectedValue: Any, realValue: Any): Boolean = {
     if (expectedValue == null) {
@@ -75,18 +71,16 @@ object HomeCelulares extends PersistentHome[Celular] {
 
   override def createExample = new Celular
 
-  def getCriterio(example: Celular) = null
-
   def celulares: Seq[Celular] = allInstances
 
   def get(nombre: String) =
-    celulares.find(_.nombre == nombre).getOrElse(null) // Acá hay que pensar algo.
+    celulares.find(_.getNombre == nombre).getOrElse(null) // Acá hay que pensar algo.
 
   /**
    * Para el proyecto web - se mantiene la busqueda por Identificador
    */
   override def searchById(id: Int) = {
-    celulares.find(_.id.equals(id)).getOrElse(null)
+    celulares.find(_.getId.equals(id)).getOrElse(null)
   }
 
 }

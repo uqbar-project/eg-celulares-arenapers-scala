@@ -10,20 +10,26 @@ import uqbar.arena.persistence.annotations.PersistentField
 @PersistentClass
 class Modelo extends Entity {
 
-	@PersistentField var id : Integer = _
-  	@PersistentField var descripcion : String = _
-	@PersistentField var costo : BigDecimal = _
-	@PersistentField var requiereResumenCuenta : Boolean = _
-
-	def this(_descripcion: String, _costo: BigDecimal, _requiereResumenCuenta: Boolean) = {
+    private var _descripcion : String = _
+    private var _costo : Float = _
+    private var _requiereResumenCuenta : Boolean = _
+  	  
+  	@PersistentField def getDescripcion = _descripcion
+  	def setDescripcion(value: String) = _descripcion = value 
+	@PersistentField def getCosto() = _costo
+	def setCosto(value: Float) = _costo = value
+	@PersistentField def getRequiereResumenCuenta() : Boolean = _requiereResumenCuenta
+	def setRequiereResumenCuenta(value: Boolean) = _requiereResumenCuenta = value
+	
+	def this(unaDescripcion: String, unCosto: Float, siRequiereResumenCuenta: Boolean) = {
   		this()
-  		descripcion = _descripcion
-  		costo = _costo
-  		requiereResumenCuenta = _requiereResumenCuenta 
+  		_descripcion = unaDescripcion
+  		_costo = unCosto
+  		_requiereResumenCuenta = siRequiereResumenCuenta 
   	}
   	
 	def getDescripcionEntera() : String = {
-		descripcion + " ($ " + costo + ")"
+		getDescripcion + " ($ " + getCosto + ")"
 	}
 
 	override def toString() : String = {
